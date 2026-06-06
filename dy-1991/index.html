@@ -1029,23 +1029,19 @@ table.data-table td.label {
         </div>
       </div>
       <div class="section-body">
-        <p class="section-intro">為協助　貴司於最短決策時間內取得完整資訊，瑞禾於正式提案前已先行完成下列評估作業。您可勾選確認、或於任一項目加註疑問，瑞禾將即時補充說明。</p>
+        <p class="section-intro">為協助　貴司於最短決策時間內取得完整資訊，瑞禾於正式提案前已先行完成下列評估作業。</p>
 
         <!-- Block A：法規架構 -->
         <div class="block-header">
           <div class="block-label">A</div>
           <div class="block-title">法規架構研究</div>
-          <div class="block-count" data-block="A"><span class="done">0</span> / 8</div>
         </div>
-        <div data-block="A">
-          <!-- 項目由 JS 動態渲染 -->
-        </div>
+        <div data-block="A"></div>
 
         <!-- Block B：區位研究 -->
         <div class="block-header">
           <div class="block-label">B</div>
           <div class="block-title">區位研究</div>
-          <div class="block-count" data-block="B"><span class="done">0</span> / 6</div>
         </div>
         <div data-block="B"></div>
 
@@ -1053,7 +1049,6 @@ table.data-table td.label {
         <div class="block-header">
           <div class="block-label">C</div>
           <div class="block-title">目標標的具體評估</div>
-          <div class="block-count" data-block="C"><span class="done">0</span> / 9</div>
         </div>
         <div data-block="C"></div>
 
@@ -1061,7 +1056,6 @@ table.data-table td.label {
         <div class="block-header">
           <div class="block-label">D</div>
           <div class="block-title">替代方案準備</div>
-          <div class="block-count" data-block="D"><span class="done">0</span> / 4</div>
         </div>
         <div data-block="D"></div>
 
@@ -1069,7 +1063,6 @@ table.data-table td.label {
         <div class="block-header">
           <div class="block-label">E</div>
           <div class="block-title">專業夥伴對接準備</div>
-          <div class="block-count" data-block="E"><span class="done">0</span> / 5</div>
         </div>
         <div data-block="E"></div>
 
@@ -1318,7 +1311,7 @@ table.data-table td.label {
         </div>
 
         <h3 style="font-size:17px;color:var(--ruihe-forest);margin:32px 0 12px;">4.4　待　貴司決定之盡職調查事項</h3>
-        <p class="section-intro">下列六項屬「正式議價前」之建議查證事項，請　貴司勾選決定執行範圍；瑞禾將協同相關專業單位逐項落實。</p>
+        <p class="section-intro">下列六項屬「正式議價前」之建議查證事項，供　貴司參考評估；瑞禾將協同相關專業單位逐項落實。</p>
         <div data-block="DD"></div>
       </div>
     </section>
@@ -1564,7 +1557,7 @@ function renderChecklist() {
   const ddContainer = document.querySelector('[data-block="DD"]');
   if (ddContainer) {
     ddContainer.innerHTML = DD_ITEMS.map(([id, title]) =>
-      renderItem(id, title, '請勾選確認是否執行；如有疑問可點擊「加註」留言')
+      renderPendingItem(id, title)
     ).join('');
   }
   attachListeners();
@@ -1572,17 +1565,28 @@ function renderChecklist() {
 }
 
 function renderItem(id, title, detail) {
-  const checked = state.checks[id] ? 'checked' : '';
-  const hasNote = state.notes[id] ? 'has-note' : '';
-  const isChecked = state.checks[id] ? 'checked' : '';
-  const noteValue = (state.notes[id] || '').replace(/"/g, '&quot;');
   return `
-    <div class="check-item ${isChecked} ${hasNote}" data-id="${id}">
-      <div class="check-row" onclick="toggleCheck('${id}', event)">
-        <input type="checkbox" ${checked} onclick="event.stopPropagation();toggleCheck('${id}')">
+    <div class="check-item checked" data-id="${id}" style="pointer-events:none;">
+      <div class="check-row" style="cursor:default;">
+        <div style="width:22px;height:22px;background:var(--ruihe-green);border-radius:4px;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:2px;">
+          <svg width="13" height="10" viewBox="0 0 13 10" fill="none"><path d="M1 5L5 9L12 1" stroke="white" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </div>
         <div class="check-content">
           <div class="check-title">${title}</div>
           ${detail ? `<div class="check-detail">${detail}</div>` : ''}
+        </div>
+      </div>
+    </div>
+  `;
+}
+
+function renderPendingItem(id, title) {
+  return `
+    <div class="check-item" data-id="${id}" style="pointer-events:none;">
+      <div class="check-row" style="cursor:default;">
+        <div style="width:22px;height:22px;border:2px solid var(--ruihe-border);border-radius:4px;flex-shrink:0;margin-top:2px;background:white;"></div>
+        <div class="check-content">
+          <div class="check-title">${title}</div>
         </div>
       </div>
     </div>
